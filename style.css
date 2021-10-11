@@ -1,0 +1,15 @@
+*{
+    background-color: #e6e6e6;
+    font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif;
+}
+
+.timer {
+    margin: 10px;
+}
+
+.question {
+    margin-left: 25px;
+}
+.options li{
+    margin: 15px;
+}

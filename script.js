@@ -2,8 +2,9 @@
 // 10/8: Started making questions. Figure out how to make array of objects (possibly JSON)
 // 10/10: Added timer and more questions. Added elements to HTML and created basic CSS styling. Stores score and initials to local storage. Displays first question and options
 // 10/11: Added jQuery link to add multiple even listeners to buttons. Keeps track of answers. Displays score at the end. Stops when timer goes off. 
+// 10/12: Submit button, Start button. Take quiz again. 
 
-//Still need to add initials, make it loop. Maybe make a start button
+//Fix README, Clear Interval, Deduct for wrong Answers, Add initials to local Storage, Add start button
 
 var score = [0, 0]; //Keeps track of their correct and incorrect answers. First value is correct, second is incorrect
 
@@ -68,7 +69,10 @@ var Question10 = {
 }
 
 var options = $('.options');
-    options.on('click', '.option', chooseSelection);
+options.on('click', '.option', chooseSelection);
+
+//var button = $('.input');
+//button.on('click', '.input', enterInitials);
 
 //Displays Question and Options from Object entered
 function displayQuestion(question) {
@@ -92,6 +96,8 @@ function displayQuestion(question) {
 var Key = [2,4,3,4,3,4,1,2,2,1];
 var qNumber = 0;
 
+
+
 function chooseSelection(event){
     var chosen = event.target.value;
     if(chosen == Key[qNumber - 1]){ //Keep track of the correct and incorrect answers
@@ -100,9 +106,9 @@ function chooseSelection(event){
     } else {
         score[1]++;
         nextQuestion();
+        timeLeft = timeLeft-5;
     }
-    //console.log(score)
-    //console.log(Key[qNumber])
+
 }
 
 function selectQuestion(qNumber){ //Spawn in Question elements to correct attributes while the timer runs
@@ -129,7 +135,6 @@ function selectQuestion(qNumber){ //Spawn in Question elements to correct attrib
     }  
     else {
         clearOptions();
-        timerEl.textContent = '0';
         showScore();
     }
 }
@@ -152,49 +157,50 @@ function nextQuestion (){
     selectQuestion(qNumber);
 }
 
-nextQuestion();
-countdown();
-
 //Save score and initials to local storage
 function spawnTextbox(){
     var div = $('.inits');
-    var input = $('<input>')
-    var message = $('<h3>')
-    var button = $('<button>')
+    var input = $('<input>');
+    var message = $('<h3>');
+    var button = $('<button>');
+    button.addClass('input');
+    button.text('Submit');
     //button.addEventListener("click", enterInitials);
     message.text('Enter your initials!')
     div.append(message);
     div.append(input);
     div.append(button);
-    
+    button.on('click', '.input', enterInitials);
 }
+
 
 function enterInitials(){
     var div = $('.inits');
     var input = div.children().eq(1);
     initials = input.value;
+    console.log(initials);
 
     localStorage.setItem("#score", score[0].toString());
     localStorage.setItem("#initials", initials);
 }
 
-
-
-
-
 ///////////////////////////
 // Timer Code
 
 var timerEl = document.getElementById('countdown');
+var timeLeft = 0;
+var timeInterval = 0;
 
 function countdown() {
-    var timeLeft = 60;
+    timeLeft = 60;
 
     //
-    var timeInterval = setInterval(function () {
+    timeInterval = setInterval(function () {
         timeLeft--;
         timerEl.textContent = timeLeft + " seconds left";
-
+        if (qNumber == 11){
+            clearInterval(timeInterval);
+        } 
         if (timeLeft == 0) {
             clearInterval(timeInterval);
             if (qNumber !== 11) {
@@ -205,5 +211,6 @@ function countdown() {
     }, 1000);
 }
 
-
+nextQuestion();
+countdown();
 
